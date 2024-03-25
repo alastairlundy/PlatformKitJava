@@ -10,7 +10,22 @@
 
 package com.alastairlundy.platformkit.shared;
 
-public class OSAnalyzer {
+import com.alastairlundy.platformkit.platforms.linux.LinuxAnalyzer;
+import com.alastairlundy.platformkit.platforms.windows.WindowsAnalyzer;
+import com.alastairlundy.utilityjar.Version;
+
+import java.io.IOException;
+
+public class PlatformAnalyzer {
+
+    protected LinuxAnalyzer linuxAnalyzer;
+    protected WindowsAnalyzer windowsAnalyzer;
+
+    PlatformAnalyzer(){
+        linuxAnalyzer = new LinuxAnalyzer();
+        windowsAnalyzer = new WindowsAnalyzer();
+    }
+
 
     protected static String getOsName(){
         return System.getProperty("os.name");
@@ -29,10 +44,18 @@ public class OSAnalyzer {
     }
 
     public static boolean isFreeBSD(){
-
+        return getOsName().toLowerCase().contains("freebsd");
     }
 
-    public Version detectOSVersion(){
+    public Version detectOSVersion() throws IOException {
+        if(isWindows()){
+            return windowsAnalyzer.getWindowsVersion();
+        }
+        if(isMac()){
 
+        }
+        if(isLinux()){
+
+        }
     }
 }
