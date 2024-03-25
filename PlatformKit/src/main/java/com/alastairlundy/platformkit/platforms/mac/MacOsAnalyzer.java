@@ -125,8 +125,16 @@ public class MacOsAnalyzer {
     }
 
 
-    public boolean isAtLeastVersion(MacOsVersion macOsVersion){
-
+    /**
+     * 
+     * @param macOsVersion
+     * @return
+     * @throws OperationNotSupportedException
+     * @throws MacOsVersionDetectionException
+     * @throws IOException
+     */
+    public boolean isAtLeastVersion(MacOsVersion macOsVersion) throws OperationNotSupportedException, MacOsVersionDetectionException, IOException {
+        return isAtLeastVersion(getMacOsVersionFromEnum(macOsVersion));
     }
 
     /**
@@ -135,9 +143,10 @@ public class MacOsAnalyzer {
      * @return
      * @throws OperationNotSupportedException Thrown if run on a platform that isn't macOS.
      * @throws MacOsVersionDetectionException
+     * @throws IOException
      */
-    public boolean isAtLeastVersion(Version macOsVersion) throws OperationNotSupportedException, MacOsVersionDetectionException {
-        return isAtLeastVersion(getMacOsVersionToEnum(macOsVersion));
+    public boolean isAtLeastVersion(Version macOsVersion) throws OperationNotSupportedException, MacOsVersionDetectionException, IOException {
+       return getMacOsVersion().isAtLeastVersion(macOsVersion);
     }
 
     public MacOsSystemInformation getMacSystemInformation(){
@@ -145,11 +154,19 @@ public class MacOsAnalyzer {
 
     }
 
-
-    public Version getMacOsVersion(){
+    /**
+     * Detects the macOS version and returns it as a System.Version object.
+     * @return
+     * @throws IOException
+     * @throws OperationNotSupportedException
+     */
+    public Version getMacOsVersion() throws IOException, OperationNotSupportedException {
         if(PlatformAnalyzer.isMac()){
-            
+            var version = getMacSwVersInfo()[1].replace("ProductVersion:", StringHelper.getEmptyString()).replace(" ", StringHelper.getEmptyString());
+
+            return Version.parse(version);
         }
+        throw new OperationNotSupportedException();
     }
 
 
