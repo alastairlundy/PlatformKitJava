@@ -24,7 +24,7 @@ public class LinuxOsRelease {
     protected String bugReportUrl;
     protected String privacyPolicyUrl;
 
-    protected String versionCodebase;
+    protected String versionCodename;
 
 
     public Boolean getLongTermSupportRelease() {
@@ -115,11 +115,11 @@ public class LinuxOsRelease {
         this.privacyPolicyUrl = privacyPolicyUrl;
     }
 
-    public String getVersionCodebase() {
-        return versionCodebase;
+    public String getVersionCodename() {
+        return versionCodename;
     }
 
-    public void setVersionCodebase(String versionCodebase) {
-        this.versionCodebase = versionCodebase;
+    public void setVersionCodename(String versionCodename) {
+        this.versionCodename = versionCodename;
     }
 }
