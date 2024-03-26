@@ -3,6 +3,7 @@ package com.alastairlundy.platformkit.platforms.mac;
 import com.alastairlundy.platformkit.internal.exceptions.mac.MacOsVersionDetectionException;
 import com.alastairlundy.platformkit.platforms.mac.enums.MacOsVersion;
 
+import com.alastairlundy.platformkit.platforms.mac.enums.MacProcessorType;
 import com.alastairlundy.platformkit.platforms.mac.models.MacOsSystemInformation;
 import com.alastairlundy.platformkit.shared.CommandRunner;
 import com.alastairlundy.platformkit.shared.PlatformAnalyzer;
@@ -149,10 +150,27 @@ public class MacOsAnalyzer {
        return getMacOsVersion().isAtLeastVersion(macOsVersion);
     }
 
-    public MacOsSystemInformation getMacSystemInformation(){
+    public MacOsSystemInformation getMacSystemInformation() throws IOException, OperationNotSupportedException {
         MacOsSystemInformation macOsSystemInformation = new MacOsSystemInformation();
 
+        macOsSystemInformation.setMacOsBuildNumber(getMacOsBuildNumber());
+        macOsSystemInformation.setMacOsVersion(getMacOsVersion());
+//        macOsSystemInformation.setProcessorType(getMacProcessorType());
+
+        //TODO: FINISH
+
+        return macOsSystemInformation;
     }
+
+//    public MacProcessorType getMacProcessorType() {
+//        if(PlatformAnalyzer.isMac()){
+//
+//        }
+//    }
+
+//    public Version getXnuVersion(){
+//
+//    }
 
     /**
      * Detects the macOS version and returns it as a System.Version object.
@@ -169,6 +187,9 @@ public class MacOsAnalyzer {
         throw new OperationNotSupportedException();
     }
 
+//    public Version getDarwinVersion(){
+//
+//    }
 
     /**
      *  Detects the Build Number of the installed version of macOS.
