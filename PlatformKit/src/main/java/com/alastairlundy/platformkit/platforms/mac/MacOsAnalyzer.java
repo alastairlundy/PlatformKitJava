@@ -4,6 +4,7 @@ import com.alastairlundy.platformkit.internal.exceptions.mac.MacOsVersionDetecti
 import com.alastairlundy.platformkit.platforms.mac.enums.MacOsVersion;
 
 import com.alastairlundy.platformkit.platforms.mac.enums.MacProcessorType;
+import com.alastairlundy.platformkit.platforms.mac.enums.MacSystemProfilerDataType;
 import com.alastairlundy.platformkit.platforms.mac.models.MacOsSystemInformation;
 import com.alastairlundy.platformkit.shared.CommandRunner;
 import com.alastairlundy.platformkit.shared.PlatformAnalyzer;
@@ -155,22 +156,39 @@ public class MacOsAnalyzer {
 
         macOsSystemInformation.setMacOsBuildNumber(getMacOsBuildNumber());
         macOsSystemInformation.setMacOsVersion(getMacOsVersion());
-//        macOsSystemInformation.setProcessorType(getMacProcessorType());
+        macOsSystemInformation.setProcessorType(getMacProcessorType());
+        macOsSystemInformation.setDarwinVersion(getDarwinVersion());
 
         //TODO: FINISH
 
         return macOsSystemInformation;
     }
 
-//    public MacProcessorType getMacProcessorType() {
-//        if(PlatformAnalyzer.isMac()){
-//
-//        }
-//    }
+    /**
+     *
+     * @return
+     */
+    public MacProcessorType getMacProcessorType() {
+        if(PlatformAnalyzer.isMac()){
+            String arch = System.getProperty("os.arch");
+
+            if(arch.toLowerCase().contains("arm") || arch.toLowerCase().contains("aarch")){
+                return MacProcessorType.AppleSilicon;
+            }
+            if(arch.toLowerCase().contains("x86") || arch.toLowerCase().contains("x64")){
+                return MacProcessorType.Intel;
+            }
+
+            return MacProcessorType.NotDetected;
+        }
+
+        return MacProcessorType.NotSupported;
+    }
 
 //    public Version getXnuVersion(){
 //
 //    }
+
 
     /**
      * Detects the macOS version and returns it as a System.Version object.
@@ -187,21 +205,60 @@ public class MacOsAnalyzer {
         throw new OperationNotSupportedException();
     }
 
-//    public Version getDarwinVersion(){
-//
-//    }
+    /**
+     *
+     * @return
+     * @throws OperationNotSupportedException
+     */
+    public Version getDarwinVersion() throws OperationNotSupportedException {
+        if(PlatformAnalyzer.isMac()){
+            return Version.parse(getMacSystemProfilerInfo(MacSystemProfilerDataType.SoftwareDataType, "Kernel Version: Darwin"));
+        }
+        throw new OperationNotSupportedException();
+    }
+
+    /**
+     *
+     * @param macSystemProfilerDataType
+     * @param key
+     * @return
+     * @throws OperationNotSupportedException
+     */
+    public String getMacSystemProfilerInfo(MacSystemProfilerDataType macSystemProfilerDataType, String key) throws OperationNotSupportedException {
+        if(PlatformAnalyzer.isMac()){
+            String info = CommandRunner.runCommandOnMac("system_profiler", new String[]{"SP", ,macSystemProfilerDataType.toString()});
+
+            String[] array = StringHelper.split(info, CharHelper.getOsAgnosticNewLineChar().toCharArray());
+
+            for(String str : array){
+                if(str.toLowerCase().contains(key.toLowerCase())){
+                    return str.replace(key, StringHelper.getEmptyString()).replace(":", StringHelper.getEmptyString());
+                }
+            }
+
+            throw new IllegalArgumentException();
+        }
+
+        throw new OperationNotSupportedException();
+    }
 
     /**
      *  Detects the Build Number of the installed version of macOS.
      * @return
      * @throws IOException
+     * @throws OperationNotSupportedException
      */
-    public String getMacOsBuildNumber() throws IOException {
+    public String getMacOsBuildNumber() throws IOException, OperationNotSupportedException {
         if(PlatformAnalyzer.isMac()){
             return getMacSwVersInfo()[2].toLowerCase().replace("BuildVersion:", StringHelper.getEmptyString().replace(" ", StringHelper.getEmptyString()));
         }
+        throw new OperationNotSupportedException();
     }
 
+    /**
+     * @return
+     * @throws IOException
+     */
     protected String[] getMacSwVersInfo() throws IOException {
         return StringHelper.split(CommandRunner.runCommandOnMac("sw_vers", new String[]{""}), CharHelper.getOsAgnosticNewLineChar().toCharArray());
     }
