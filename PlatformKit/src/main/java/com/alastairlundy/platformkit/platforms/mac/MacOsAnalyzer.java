@@ -168,6 +168,14 @@ public class MacOsAnalyzer {
      *
      * @return
      */
+    public boolean isAppleSiliconMac(){
+        return getMacProcessorType() == MacProcessorType.AppleSilicon;
+    }
+
+    /**
+     *
+     * @return
+     */
     public MacProcessorType getMacProcessorType() {
         if(PlatformAnalyzer.isMac()){
             String arch = System.getProperty("os.arch");
