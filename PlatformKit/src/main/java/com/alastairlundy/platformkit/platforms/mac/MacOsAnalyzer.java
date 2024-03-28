@@ -218,7 +218,7 @@ public class MacOsAnalyzer {
      * @return
      * @throws OperationNotSupportedException
      */
-    public Version getDarwinVersion() throws OperationNotSupportedException {
+    public Version getDarwinVersion() throws OperationNotSupportedException, IOException {
         if(PlatformAnalyzer.isMac()){
             return Version.parse(getMacSystemProfilerInfo(MacSystemProfilerDataType.SoftwareDataType, "Kernel Version: Darwin"));
         }
@@ -232,9 +232,9 @@ public class MacOsAnalyzer {
      * @return
      * @throws OperationNotSupportedException
      */
-    public String getMacSystemProfilerInfo(MacSystemProfilerDataType macSystemProfilerDataType, String key) throws OperationNotSupportedException {
+    public String getMacSystemProfilerInfo(MacSystemProfilerDataType macSystemProfilerDataType, String key) throws OperationNotSupportedException, IOException {
         if(PlatformAnalyzer.isMac()){
-            String info = CommandRunner.runCommandOnMac("system_profiler", new String[]{"SP", ,macSystemProfilerDataType.toString()});
+            String info = CommandRunner.runCommandOnMac("system_profiler", new String[]{"SP", macSystemProfilerDataType.toString()});
 
             String[] array = StringHelper.split(info, CharHelper.getOsAgnosticNewLineChar().toCharArray());
 
