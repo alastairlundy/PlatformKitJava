@@ -1,5 +1,6 @@
 package com.alastairlundy.platformkit.platforms.windows;
 
+import com.alastairlundy.platformkit.internal.exceptions.windows.WindowsEditionDetectionException;
 import com.alastairlundy.platformkit.internal.exceptions.windows.WindowsVersionDetectionException;
 import com.alastairlundy.platformkit.platforms.windows.enums.WindowsEdition;
 import com.alastairlundy.platformkit.platforms.windows.enums.WindowsVersion;
@@ -21,10 +22,67 @@ import java.io.IOException;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 
+/**
+ *
+ */
 public class WindowsAnalyzer {
 
-    public WindowsEdition getWindowsEdition() throws OperationNotSupportedException {
+    /**
+     * 
+     * @return
+     * @throws OperationNotSupportedException
+     * @throws IOException
+     * @throws WindowsVersionDetectionException
+     * @throws WindowsEditionDetectionException
+     */
+    public WindowsEdition getWindowsEdition() throws OperationNotSupportedException, IOException, WindowsVersionDetectionException, WindowsEditionDetectionException {
         if(PlatformAnalyzer.isWindows()){
+            var edition = getWindowsSystemInformation().getOsName().toLowerCase();
+
+            if(edition.contains("home")){
+                return WindowsEdition.Home;
+            }
+            else if(edition.contains("pro") && edition.contains("workstation")){
+                return WindowsEdition.ProfessionalForWorkstations;
+            }
+            else if(edition.contains("pro") && !edition.contains("education")){
+                return WindowsEdition.Professional;
+            }
+            else if(edition.contains("pro") && edition.contains("education")){
+                return WindowsEdition.ProfessionalForEducation;
+            }
+            else if(!edition.contains("pro") && edition.contains("education")){
+                return WindowsEdition.Education;
+            }
+            else if(edition.contains("server")){
+                return WindowsEdition.Server;
+            }
+            else if(edition.contains("enterprise") && edition.contains("ltsc") && !edition.contains("iot")){
+                return WindowsEdition.EnterpriseLTSC;
+            }
+            else if(edition.contains("enterprise") && edition.contains("ltsc") && edition.contains("iot")){
+                return WindowsEdition.IoTEnterpriseLTSC;
+            }
+            else if(edition.contains("enterprise") && !edition.contains("ltsc") && edition.contains("iot")){
+                return WindowsEdition.IoTEnterprise;
+            }
+            else if(edition.contains("enterprise") && !edition.contains("ltsc") && !edition.contains("iot")){
+                return WindowsEdition.EnterpriseSemiAnnualChannel;
+            }
+            else if(edition.contains("iot") && edition.contains("core")){
+                return WindowsEdition.IoTCore;
+            }
+            else if(edition.contains("team")){
+                return WindowsEdition.Team;
+            }
+
+            if(isWindows11()){
+                if(edition.contains("se")){
+                    return WindowsEdition.SE;
+                }
+            }
+
+            throw new WindowsEditionDetectionException();
 
         }
         throw new OperationNotSupportedException();
