@@ -236,7 +236,7 @@ public class MacOsAnalyzer {
         if(PlatformAnalyzer.isMac()){
             String info = CommandRunner.runCommandOnMac("system_profiler", new String[]{"SP", macSystemProfilerDataType.toString()});
 
-            String[] array = StringHelper.split(info, CharHelper.getOsAgnosticNewLineChar().toCharArray());
+            String[] array = StringHelper.split(info, CharHelper.getOsAgnosticNewLineChar());
 
             for(String str : array){
                 if(str.toLowerCase().contains(key.toLowerCase())){
@@ -268,6 +268,6 @@ public class MacOsAnalyzer {
      * @throws IOException
      */
     protected String[] getMacSwVersInfo() throws IOException {
-        return StringHelper.split(CommandRunner.runCommandOnMac("sw_vers", new String[]{""}), CharHelper.getOsAgnosticNewLineChar().toCharArray());
+        return StringHelper.split(CommandRunner.runCommandOnMac("sw_vers", new String[]{""}), CharHelper.getOsAgnosticNewLineChar());
     }
 }
