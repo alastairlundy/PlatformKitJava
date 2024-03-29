@@ -47,15 +47,20 @@ public class PlatformAnalyzer {
         return getOsName().toLowerCase().contains("freebsd");
     }
 
-    public Version detectOSVersion() throws IOException {
+    public Version detectOSVersion() throws IOException, OperationNotSupportedException {
         if(isWindows()){
             return windowsAnalyzer.getWindowsVersion();
         }
         if(isMac()){
 
+            return macOsAnalyzer.getMacOsVersion();
         }
         if(isLinux()){
-
+            return linuxAnalyzer.getLinuxDistributionVersion();
         }
+//        if(isFreeBSD()){
+//            throw new ExecutionControl.NotImplementedException();
+//        }
+        throw new OperationNotSupportedException();
     }
 }

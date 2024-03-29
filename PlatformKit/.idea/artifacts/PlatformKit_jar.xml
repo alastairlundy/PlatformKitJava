@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="PlatformKit:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/PlatformKit_jar</output-path>
+    <root id="archive" name="PlatformKit.jar">
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../utilityjar/utilityjar/out/artifacts/com_alastairlundy_utilityjar_jar/UtilityJar.jar" path-in-jar="/" />
+      <element id="module-output" name="PlatformKit.main" />
+    </root>
+  </artifact>
+</component>
