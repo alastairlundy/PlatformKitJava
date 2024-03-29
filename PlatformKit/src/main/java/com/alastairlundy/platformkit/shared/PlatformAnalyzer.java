@@ -11,19 +11,24 @@
 package com.alastairlundy.platformkit.shared;
 
 import com.alastairlundy.platformkit.platforms.linux.LinuxAnalyzer;
+import com.alastairlundy.platformkit.platforms.mac.MacOsAnalyzer;
 import com.alastairlundy.platformkit.platforms.windows.WindowsAnalyzer;
 import com.alastairlundy.utilityjar.Version;
+import jdk.jshell.spi.ExecutionControl;
 
+import javax.naming.OperationNotSupportedException;
 import java.io.IOException;
 
 public class PlatformAnalyzer {
 
     protected LinuxAnalyzer linuxAnalyzer;
     protected WindowsAnalyzer windowsAnalyzer;
+    protected MacOsAnalyzer macOsAnalyzer;
 
     PlatformAnalyzer(){
         linuxAnalyzer = new LinuxAnalyzer();
         windowsAnalyzer = new WindowsAnalyzer();
+        macOsAnalyzer = new MacOsAnalyzer();
     }
 
 
@@ -52,7 +57,6 @@ public class PlatformAnalyzer {
             return windowsAnalyzer.getWindowsVersion();
         }
         if(isMac()){
-
             return macOsAnalyzer.getMacOsVersion();
         }
         if(isLinux()){
