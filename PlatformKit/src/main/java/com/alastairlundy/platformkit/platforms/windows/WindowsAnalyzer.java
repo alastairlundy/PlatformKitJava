@@ -641,14 +641,18 @@ public class WindowsAnalyzer {
      * @return
      * @throws IOException
      */
-    public Version getWindowsVersion() throws IOException {
-       String result = ProcessRunner.runProcessOnWindows("ver", new String[]{""}, false);
+    public Version getWindowsVersion() throws IOException, OperationNotSupportedException {
+      if(PlatformAnalyzer.isWindows()){
+          String result = ProcessRunner.runProcessOnWindows("ver", new String[]{""}, false);
 
-        result = result.replace("Microsoft Windows", "");
-        result = result.replace("Version", "");
+          result = result.replace("Microsoft Windows", "");
+          result = result.replace("Version", "");
 
-        result = StringHelper.remove(result, new char[]{'[', ']' });
+          result = StringHelper.remove(result, new char[]{'[', ']' });
 
-        return Version.parse(result);
+          return Version.parse(result);
+      }
+        throw new OperationNotSupportedException();
     }
+
 }
